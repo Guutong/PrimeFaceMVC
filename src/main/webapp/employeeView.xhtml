@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <f:facet name="first">
+            <title>PrimeFaces</title>
+        </f:facet>
+    </h:head>
+
+    <h:body>
+
+        <h:form >
+            <p:dataTable id="tbl" value="#{employee.messages}"
+                         rowIndexVar="counter"
+                         var="item"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                         paginator="true" rows="10" style="margin-bottom:20px" >
+                <p:column headerText="no." style="width: 5%">
+                    #{counter + 1}
+                </p:column>
+                <p:column headerText="id">
+                    #{item.id}
+                </p:column>
+                <p:column headerText="ชื่อ">
+                    #{item.firstName}
+                </p:column>
+                <p:column headerText="นามสกุล">
+                    #{item.lastName}
+                </p:column>
+                <p:column headerText="email">
+                    #{item.email}
+                </p:column>
+                <p:column headerText="เบอร์โทรศัพท์">               
+                    <h:outputText value="#{item.phoneNumber}">
+                        <f:convertNumber />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="วันที่จ้าง">
+                    <h:outputText value="#{item.hireDate}">
+                        <f:convertDateTime pattern="EE dd MMM YYYY"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="งาน">
+                    #{item.jobId}
+                </p:column>
+                <p:column headerText="เงินเดือน">
+                    <h:outputText value="#{item.salary}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="การจัดการ">   
+                    <p:commandButton value="แก้ไข" id="ajax" actionListener="#" styleClass="ui-priority-warning" />
+                    <p:commandButton value="ลบ" id="ajax" actionListener="#" styleClass="ui-priority-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
