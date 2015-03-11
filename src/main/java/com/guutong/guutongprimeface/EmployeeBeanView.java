@@ -5,101 +5,49 @@
  */
 package com.guutong.guutongprimeface;
 
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+
 /**
  *
  * @author pornmongkon
  */
-@ManagedBean(name = "employee")
-@SessionScoped
 public class EmployeeBeanView {
-    
-  
-    private Integer id;
-  
-    private String firstName;
-  
-    private String lastName;
-    private String email;
-
-   
-    private Date hireDate;
-
-    private String jobId;
-
-    private String phoneNumber;
-    private Float salary;       
-    
-    public ArrayList<EmployeeBeanView> getMessages() {
-        return Employee.getEmployee();
+    public static ArrayList<EmployeeModel> getEmployee() {
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            Connection con = DriverManager.getConnection(
+					"jdbc:oracle:thin:@localhost:1521:ORCL", "hr",
+					"1234");
+            PreparedStatement ps = con.prepareStatement("select * from employees");
+            ArrayList<EmployeeModel> al = new ArrayList<EmployeeModel>();
+            ResultSet rs = ps.executeQuery();
+            boolean found = false;
+            while (rs.next()) {
+                EmployeeModel e = new EmployeeModel();
+                e.setId(rs.getInt("employee_id"));
+                e.setFirstName(rs.getString("first_name"));
+                e.setLastName(rs.getString("last_name"));
+                e.setEmail(rs.getString("email"));
+                e.setJobId(rs.getString("job_id"));
+                e.setHireDate(rs.getDate("hire_date"));
+                e.setPhoneNumber(rs.getString("phone_number"));
+                e.setSalary(rs.getFloat("salary"));
+                al.add(e);
+                found = true;
+            }
+            rs.close();
+            if (found) {
+                return al;
+            } else {
+                return null; // no entires found
+            }
+        } catch (Exception e) {
+            System.out.println("Error In getEmployee() -->" + e.getMessage());
+            return (null);
+        }
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getHireDate() {
-        return hireDate;
-    }
-
-    public void setHireDate(Date hireDate) {
-        this.hireDate = hireDate;
-    }
-
-    public String getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Float getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Float salary) {
-        this.salary = salary;
-    }
-
 }
